@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Meal Income Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f1f1f1;
+    }
+    h2 {
+      text-align: center;
+    }
+    input, button {
+      font-size: 18px;
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+    }
+    #status {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>🍛 Daily Meal Income Tracker</h2>
+
+  <label>Set your daily target amount (₹):</label>
+  <input type="number" id="targetInput" placeholder="e.g. 150">
+
+  <button onclick="setTarget()">Set Target</button>
+
+  <hr>
+
+  <label>Enter income amount (₹):</label>
+  <input type="number" id="incomeInput" placeholder="e.g. 40">
+
+  <button onclick="addIncome()">Add Income</button>
+  <button onclick="resetIncome()">Reset</button>
+
+  <p>Total Today: ₹<span id="total">0</span> / ₹<span id="limit">0</span></p>
+  <p id="status"></p>
+
+  <script>
+    let total = 0;
+    let limit = 0;
+
+    function setTarget() {
+      const target = parseFloat(document.getElementById('targetInput').value);
+      if (!isNaN(target) && target > 0) {
+        limit = target;
+        document.getElementById('limit').innerText = limit.toFixed(2);
+        updateStatus();
+      } else {
+        alert("Please enter a valid target amount.");
+      }
+    }
+
+    function addIncome() {
+      if (limit === 0) {
+        alert("Please set your target amount first.");
+        return;
+      }
+
+      const input = document.getElementById('incomeInput');
+      const value = parseFloat(input.value);
+      if (!isNaN(value) && value > 0) {
+        total += value;
+        document.getElementById('total').innerText = total.toFixed(2);
+        updateStatus();
+      } else {
+        alert("Please enter a valid amount.");
+      }
+      input.value = '';
+    }
+
+    function updateStatus() {
+      const status = document.getElementById('status');
+      if (total < limit) {
+        status.textContent = `✅ You can still add ₹${(limit - total).toFixed(2)} today.`;
+        status.style.color = "green";
+      } else if (total === limit) {
+        status.textContent = "🎯 You reached the limit!";
+        status.style.color = "blue";
+      } else {
+        status.textContent = `⚠️ Over limit by ₹${(total - limit).toFixed(2)}!`;
+        status.style.color = "red";
+      }
+    }
+
+    function resetIncome() {
+      total = 0;
+      document.getElementById('total').innerText = "0";
+      document.getElementById('status').innerText = "";
+    }
+  </script>
+</body>
+</html>
